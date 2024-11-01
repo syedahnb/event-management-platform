@@ -17,7 +17,7 @@ class FeedbackController extends Controller
                 ->exists() && $event->date < now();
 
         if (!$isEligible) {
-            return back()->withErrors(['message' => 'You are not eligible to leave feedback for this event.']);
+            return response()->json(['message' => 'You are not eligible to leave feedback for this event.'], 403);
         }
 
         // Store feedback

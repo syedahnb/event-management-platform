@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('location');
             $table->date('date');
             $table->integer('capacity');
-            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('created_by')->nullable()->constrained('users');
             $table->boolean('is_full')->default(false);
             $table->timestamps();
         });
