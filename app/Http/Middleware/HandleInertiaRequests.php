@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
@@ -32,13 +31,24 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
+
+            // Share authenticated user
             'auth' => [
                 'user' => $request->user(),
             ],
+
+            // Share Ziggy configuration for route generation in JavaScript
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+
+            // Share notifications if user is authenticated
+            'notifications' => function () use ($request) {
+                return $request->user()
+                    ? $request->user()->unreadNotifications // Get unread notifications
+                    : [];
+            },
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Notifications\RegistrationSuccessNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -50,7 +51,9 @@ class RegistrationController extends Controller
             'user_id' => Auth::id(),
         ]);
 
-        // Update the event's is_full status if it has reached capacity
+
+        Auth::user()->notify(new RegistrationSuccessNotification($event));
+
         if ($event->registrations()->count() >= $event->capacity) {
             $event->update(['is_full' => true]);
         }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Event\StoreEventRequest;
 use App\Http\Requests\Event\UpdateEventRequest;
 use App\Models\Event;
+use App\Notifications\EventUpdateNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
@@ -104,13 +105,20 @@ class EventController extends Controller
 
         $event->update($request->validated());
 
+        foreach ($event->registrations as $registration) {
+            $registration->user->notify(new EventUpdateNotification($event, 'The event has been updated'));
+        }
+
         return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
 
     public function destroy(Event $event)
     {
         Gate::authorize('delete', $event);
-
+        $event->registrations()->delete();
+        foreach ($event->registrations as $registration) {
+            $registration->user->notify(new EventUpdateNotification($event, 'The event has been canceled.'));
+        }
         $event->delete();
 
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');

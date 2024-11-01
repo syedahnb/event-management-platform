@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue';
+import {ref} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import { Link } from '@inertiajs/vue3';
+import {Link} from '@inertiajs/vue3';
+import Notifications from "@/Components/Notifications.vue";
 
 const showingNavigationDropdown = ref(false);
 </script>
@@ -193,13 +194,19 @@ const showingNavigationDropdown = ref(false);
                 v-if="$slots.header"
             >
                 <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                    <slot name="header" />
+                    <slot name="header"/>
                 </div>
             </header>
 
             <!-- Page Content -->
             <main>
-                <slot />
+                <div class=" max-w-7xl mx-auto ">
+                    <div class="flex  justify-between shadow-md p-5 my-5">
+                        <h2>Notifications</h2>
+                        <Notifications :notifications="$page.props.notifications"/>
+                    </div>
+                </div>
+                <slot/>
             </main>
         </div>
     </div>

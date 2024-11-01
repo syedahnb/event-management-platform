@@ -26,7 +26,9 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth'])->group(function () {
     Route::resource('/events', EventController::class);
     Route::get('/events/{event}/attend', [RegistrationController::class, 'show'])->name('events.attend');
+    Route::post('/events/{event}/attend', [RegistrationController::class, 'store'])->name('events.attend');
     Route::post('/events/{event}/register', [RegistrationController::class, 'store'])->name('events.register');
+
 });
 
 
