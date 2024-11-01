@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreFeedbackRequest;
+use App\Http\Requests\Feedback\StoreFeedbackRequest;
 use App\Models\Event;
 use App\Models\Feedback;
 use Illuminate\Support\Facades\Auth;
