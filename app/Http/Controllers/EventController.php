@@ -13,11 +13,28 @@ class EventController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
 
-        $events = Event::where('created_by', auth()->id())
+        // Determine query based on user role
+        if ($user->role === 'admin') {
+            // Admin can view all events
+            $eventsQuery = Event::query();
+        } elseif ($user->role === 'organizer') {
+            // Organizer can only view events they created
+            $eventsQuery = Event::where('created_by', $user->id);
+        } else {
+            // Attendee can view events but cannot edit or delete
+            return Inertia::render('Events/Index', [
+                'events' => Event::orderBy('created_at', 'desc')->paginate(10),
+                'can_create' => false,
+            ]);
+        }
+
+        // Fetch paginated events with permission flags for edit and delete
+        $events = $eventsQuery
             ->orderBy('created_at', 'desc')
             ->paginate(10)
-            ->through(function ($event) {
+            ->through(function ($event) use ($user) {
                 return [
                     'id' => $event->id,
                     'title' => $event->title,
@@ -26,13 +43,13 @@ class EventController extends Controller
                     'date' => $event->date,
                     'capacity' => $event->capacity,
                     'is_full' => $event->is_full,
-                    'can_edit' => auth()->user()->can('update', $event),
-                    'can_delete' => auth()->user()->can('delete', $event),
+                    'can_edit' => $user->can('update', $event),
+                    'can_delete' => $user->can('delete', $event),
                 ];
             });
 
-        $canCreate = auth()->user()->can('create', Event::class);
-
+        // Determine if the user can create events
+        $canCreate = $user->can('create', Event::class);
 
         return Inertia::render('Events/Index', [
             'events' => $events,

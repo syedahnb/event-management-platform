@@ -46,6 +46,7 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Events
                                 </NavLink>
+
                             </div>
                         </div>
 

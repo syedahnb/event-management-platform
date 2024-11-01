@@ -39,6 +39,14 @@
                                 <span v-else class="text-green-500 font-bold">Open</span>
                             </td>
                             <td class="py-2 px-4 border-b flex">
+                                <!-- Attend Button -->
+                                <button
+                                    v-if="!event.is_full"
+                                    @click="showEvent(event)"
+                                    class="bg-green-950 text-white px-4 py-2 rounded"
+                                >
+                                    Attend
+                                </button>
                                 <!-- Edit Button, restricted based on authorization -->
                                 <button
                                     v-if="event.can_edit"
@@ -47,7 +55,6 @@
                                 >
                                     Edit
                                 </button>
-
                                 <!-- Delete Button, restricted based on authorization -->
                                 <button
                                     v-if="event.can_delete"
@@ -102,11 +109,14 @@ export default {
         fetchPage(url) {
             Inertia.visit(url);
         },
+        createEvent() {
+            this.$inertia.visit('/events/create');
+        },
         editEvent(event) {
             this.$inertia.visit(`/events/${event.id}/edit`);
         },
-        createEvent() {
-            this.$inertia.visit('/events/create');
+        showEvent(event) {
+            this.$inertia.visit(`/events/${event.id}/attend`);
         },
         deleteEvent(id) {
             if (confirm("Are you sure you want to delete this event?")) {

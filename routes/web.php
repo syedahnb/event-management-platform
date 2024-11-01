@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\RegistrationController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -21,7 +22,12 @@ Route::get('/dashboard', function () {
 
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/events', EventController::class);
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('/events', EventController::class);
+    Route::get('/events/{event}/attend', [RegistrationController::class, 'show'])->name('events.attend');
+    Route::post('/events/{event}/register', [RegistrationController::class, 'store'])->name('events.register');
+});
 
 
 Route::middleware('auth')->group(function () {
