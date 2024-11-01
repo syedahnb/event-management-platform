@@ -5,9 +5,10 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import {Link} from '@inertiajs/vue3';
+import {Link, usePage} from '@inertiajs/vue3';
 import Notifications from "@/Components/Notifications.vue";
 
+const { auth } = usePage().props;
 const showingNavigationDropdown = ref(false);
 </script>
 
@@ -42,11 +43,20 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
 
                                 <NavLink
+
                                     :href="route('events.index')"
                                     :active="route().current('events.index')"
                                 >
                                     Events
                                 </NavLink>
+                                <NavLink
+                                    v-if="$page.props.auth.user.role === 'admin'"
+                                    :href="route('admin.report')"
+                                    :active="route().current('admin.report')"
+                                >
+                                    Reports
+                                </NavLink>
+
 
                             </div>
                         </div>

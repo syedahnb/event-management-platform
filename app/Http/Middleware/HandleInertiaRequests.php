@@ -34,7 +34,12 @@ class HandleInertiaRequests extends Middleware
 
             // Share authenticated user
             'auth' => [
-                'user' => $request->user(),
+                'user' => $request->user() ? [
+                    'id' => $request->user()->id,
+                    'name' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'role' => $request->user()->role,
+                ] : null,
             ],
 
             // Share Ziggy configuration for route generation in JavaScript
@@ -46,7 +51,7 @@ class HandleInertiaRequests extends Middleware
             // Share notifications if user is authenticated
             'notifications' => function () use ($request) {
                 return $request->user()
-                    ? $request->user()->unreadNotifications // Get unread notifications
+                    ? $request->user()->unreadNotifications
                     : [];
             },
         ];

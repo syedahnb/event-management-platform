@@ -9,6 +9,8 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\FeedbackController;
 
+use App\Http\Controllers\ReportingController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -30,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/events/{event}/attend', [RegistrationController::class, 'store'])->name('events.attend');
     Route::post('/events/{event}/register', [RegistrationController::class, 'store'])->name('events.register');
     Route::post('/events/{event}/feedback', [FeedbackController::class, 'store'])->name('feedback.store');
+
+    Route::get('/admin/report', [ReportingController::class, 'index'])->name('admin.report');
 });
 
 
