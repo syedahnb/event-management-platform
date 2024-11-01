@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +11,20 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->executeSeeder(UserSeeder::class);
+        $this->executeSeeder(EventSeeder::class);
+    }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+    /**
+     * Execute a seeder and output whether it was successful or not.
+     */
+    private function executeSeeder(string $seeder): void
+    {
+        try {
+            $this->call($seeder);
+            $this->command->info("Successfully executed {$seeder}.");
+        } catch (\Exception $e) {
+            $this->command->error("Failed to execute {$seeder}: " . $e->getMessage());
+        }
     }
 }
