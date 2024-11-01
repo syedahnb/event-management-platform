@@ -13,9 +13,12 @@ class RegistrationController extends Controller
 
     public function show(Event $event)
     {
-        // Calculate remaining capacity
+        $user = auth()->user();
+        $isRegistered = $event->registrations()->where('user_id', $user->id)->exists();
         $registeredCount = $event->registrations()->count();
         $remainingSpots = max($event->capacity - $registeredCount, 0);
+        $feedback = $event->feedback()->with('user')->orderBy('submitted_at', 'desc')->get();
+
 
         return Inertia::render('Events/Show', [
             'event' => [
@@ -28,6 +31,8 @@ class RegistrationController extends Controller
                 'is_full' => $event->is_full,
                 'remaining_spots' => $remainingSpots,
             ],
+            'is_registered' => $isRegistered,
+            'feedback' => $feedback,
         ]);
     }
 
